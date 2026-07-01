@@ -3,9 +3,9 @@ spring:
     name: product-service
 
   datasource:
-    url: jdbc:mysql://host.docker.internal:3306/ecommerce_product_db
+    url: jdbc:mysql://mysql:3306/productdb
     username: root
-    password: Dell@202301!
+    password: root
 
   jpa:
     hibernate:
@@ -18,4 +18,3 @@ jwt:
 
 server:
   port: 8081
-
