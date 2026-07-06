@@ -6,6 +6,9 @@ import com.aman.ecommerce.productservice.entity.Product;
 import com.aman.ecommerce.productservice.exception.ProductNotFoundException;
 import com.aman.ecommerce.productservice.repository.ProductRepository;
 import org.slf4j.LoggerFactory;
+
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +35,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @CacheEvict(value = "products", allEntries = true)
     public ProductDto saveProduct(ProductDto productDto) {
 
         logger.info("Saving new product: {}", productDto.getName());
@@ -78,6 +82,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(value = "products", key = "#id")
     public ProductDto getProductById(Long id) {
 
         logger.info("Fetching product with id: {}", id);
@@ -91,6 +96,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @CacheEvict(value = "products", key = "#id")
     public ProductDto updateProduct(Long id, ProductDto productDto) {
 
         logger.info("Updating product with id: {}", id);
@@ -116,6 +122,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @CacheEvict(value = "products", key = "#id")
     public void deleteProduct(Long id) {
 
         logger.info("Deleting product with id: {}", id);

@@ -23,17 +23,23 @@ public class JwtService {
 
     private Key getSigningKey(){
 
+        System.out.println("SECRET = " + secret);
+
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     public String generateToken(String email){
 
-        return Jwts.builder()
+        String token = Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
+
+        System.out.println("GENERATED TOKEN = " + token);
+
+        return token;
     }
 
     public String extractEmail(String token) {

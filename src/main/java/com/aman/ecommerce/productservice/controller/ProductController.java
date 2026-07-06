@@ -81,15 +81,17 @@ public class ProductController {
     }
 
     @GetMapping("/admin/dashboard")
+    @PreAuthorize("hasRole('ADMIN')")
     public String adminDashboard(){
 
-        return "Welcome Admin";
+        return "Welcome Admin Dashboard";
     }
 
     @GetMapping("user/dashboard")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public String userDashboard(){
 
-        return "Welcome User";
+        return "Welcome User DashBoard";
     }
 
     @PutMapping("/{id}")

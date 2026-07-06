@@ -2,27 +2,41 @@ services:
   mysql:
     image: mysql:8.0
     container_name: mysql-container
-
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: productdb
-
     ports:
       - "3306:3306"
-
     volumes:
       - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  redis:
+    image: redis:7.0
+    container_name: redis-container
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   product-service:
     image: product-service:1.0
     container_name: product-service-container
-
     depends_on:
-      - mysql
-
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     ports:
       - "8081:8081"
-
     environment:
       SPRING_PROFILES_ACTIVE: docker
 
